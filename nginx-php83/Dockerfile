@@ -1,7 +1,14 @@
-# Use your favorite image
 FROM alpine
-ENV TZ=Asia/Shanghai
+ENV UPLOAD_MAX_SIZE=10G \
+    APC_SHM_SIZE=128M \
+    OPCACHE_MEM_SIZE=128 \
+    MEMORY_LIMIT=512M \
+    CRON_PERIOD=15m \
+    CRON_MEMORY_LIMIT=1g \
+    TZ=Asia/Shanghai \
+    DOMAIN=localhost
 
+# add nginx + php83
 RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
      && apk update \
      && apk add --no-cache tzdata  \
@@ -16,6 +23,7 @@ RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositorie
          php83-mysqli \
          php83-mysqlnd \
          php83-openssl \
+         php83-opcache \
          php83-pcntl \
          php83-pdo \
          php83-pdo_mysql \
@@ -37,5 +45,17 @@ RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositorie
          libevent \
       && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
       && echo "Asia/Shanghai" > /etc/timezone \
-      && mkdir -p /etc/s6
+# 拷贝nginx和php配置文件 和替换环境变量
+COPY /config/php/php.ini /etc/php83/php.ini
+COPY /config/php/fpm-pool.conf /etc/php83/php-fpm.conf
+COPY /config/nginx/conf/nginx.conf /etc/nginx/nginx.conf
+RUN sed -i -e "s/<UPLOAD_MAX_SIZE>/$UPLOAD_MAX_SIZE/g" /etc/nginx/nginx.conf
+# 修改目录权限
+RUN mkdir -p /var/log/php83 \
+    && mkdir -p /var/log/nginx\
+    && chown -R nobody.nobody /var/log/php83 \
+    && chown -R nobody.nobody /var/log/nginx \
+    && chown -R nobody.nobody /run
+# s6配置
+COPY --chown=nobody.nobody /config/s6.d /etc/s6
 ENTRYPOINT ["/bin/s6-svscan" ,"/etc/s6"]
