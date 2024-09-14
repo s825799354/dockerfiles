@@ -60,7 +60,12 @@ RUN mkdir -p /var/log/php83 \
     && mkdir -p /var/log/nginx\
     && chown -R nobody.nobody /var/log/php83 \
     && chown -R nobody.nobody /var/log/nginx \
-    && chown -R nobody.nobody /run
+    && chown -R nobody.nobody /run \
+    && chmod +x /usr/local/bin/supercronic \
+    && chmod +x /etc/s6/supercron/run \
+    && chmod +x /etc/s6/php/run \
+    && chmod +x /etc/s6/nginx/run
+
 # s6配置
 COPY --chown=nobody.nobody /config/s6.d /etc/s6
 ENTRYPOINT ["/bin/s6-svscan" ,"/etc/s6"]
