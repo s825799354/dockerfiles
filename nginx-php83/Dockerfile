@@ -55,6 +55,8 @@ RUN sed -i -e "s/<UPLOAD_MAX_SIZE>/$UPLOAD_MAX_SIZE/g" /etc/nginx/nginx.conf
 COPY /supercronic /usr/local/bin/
 RUN mkdir /webser \
     && >/webser/supercronic_cron
+# s6配置
+COPY --chown=nobody.nobody /config/s6.d /etc/s6
 # 修改目录权限
 RUN mkdir -p /var/log/php83 \
     && mkdir -p /var/log/nginx\
@@ -66,6 +68,5 @@ RUN mkdir -p /var/log/php83 \
     && chmod +x /etc/s6/php/run \
     && chmod +x /etc/s6/nginx/run
 
-# s6配置
-COPY --chown=nobody.nobody /config/s6.d /etc/s6
+
 ENTRYPOINT ["/bin/s6-svscan" ,"/etc/s6"]
