@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/local/bin/supercronic /webser/supercronic_cron

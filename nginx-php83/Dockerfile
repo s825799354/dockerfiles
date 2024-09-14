@@ -50,6 +50,11 @@ COPY /config/php/php.ini /etc/php83/php.ini
 COPY /config/php/fpm-pool.conf /etc/php83/php-fpm.conf
 COPY /config/nginx/conf/nginx.conf /etc/nginx/nginx.conf
 RUN sed -i -e "s/<UPLOAD_MAX_SIZE>/$UPLOAD_MAX_SIZE/g" /etc/nginx/nginx.conf
+
+## 配置定时器
+COPY /supercronic /usr/local/bin/
+RUN mkdir /webser \
+    && >/webser/supercronic_cron
 # 修改目录权限
 RUN mkdir -p /var/log/php83 \
     && mkdir -p /var/log/nginx\
