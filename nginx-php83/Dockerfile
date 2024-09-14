@@ -63,6 +63,7 @@ RUN mkdir -p /var/log/php83 \
     && mkdir -p /var/log/nginx\
     && chown -R nobody.nobody /var/log/php83 \
     && chown -R nobody.nobody /var/log/nginx \
+    && chown -R nobody.nobody /var/lib/nginx \
     && chown -R nobody.nobody /run \
     && chmod +x /usr/local/bin/supercronic \
     && chmod +x /etc/s6/supercronic/run \
