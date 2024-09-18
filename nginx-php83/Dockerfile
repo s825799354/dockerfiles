@@ -49,7 +49,6 @@ RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositorie
 COPY /config/php/php.ini /etc/php83/php.ini
 COPY /config/php/fpm-pool.conf /etc/php83/php-fpm.conf
 COPY /config/nginx/conf/nginx.conf /etc/nginx/nginx.conf
-COPY /config/nginx/conf.d /etc/nginx/conf.d/
 RUN sed -i -e "s/<UPLOAD_MAX_SIZE>/$UPLOAD_MAX_SIZE/g" /etc/nginx/nginx.conf
 
 ## 配置定时器
