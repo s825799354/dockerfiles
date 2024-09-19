@@ -38,6 +38,7 @@ RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositorie
          php83-xml \
          php83-xmlwriter \
          php83-zip \
+         php83-redis\
          s6 \
          nginx \
          tzdata \
